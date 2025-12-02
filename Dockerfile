@@ -45,19 +45,6 @@ RUN if [ -n "$EXTRAS" ]; then \
       pip install --no-cache-dir whisperlivekit; \
     fi
 
-# In-container caching for Hugging Face models by: 
-# A) Make the cache directory persistent via an anonymous volume.
-#    Note: This only persists for a single, named container. This is 
-#          only for convenience at de/test stage. 
-#          For prod, it is better to use a named volume via host mount/k8s.
-VOLUME ["/root/.cache/huggingface/hub"]
-
-
-# or
-# B) Conditionally copy a local pre-cache from the build context to the 
-#    container's cache via the HF_PRECACHE_DIR build-arg.
-#    WARNING: This will copy ALL files in the pre-cache location.
-
 # Conditionally copy a cache directory if provided
 RUN if [ -n "$HF_PRECACHE_DIR" ]; then \
       echo "Copying Hugging Face cache from $HF_PRECACHE_DIR"; \
